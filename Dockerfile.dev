@@ -1,0 +1,20 @@
+FROM golang:1.25.3-alpine
+
+WORKDIR /app
+
+# Copy files into the container working directory /app
+COPY go.mod go.sum ./ 
+
+Run go install github.com/air-verse/air@latest
+
+# Download the dependencies, and its cached. When nothing changed, the next time you run the image, this step will be skipped
+RUN go mod download
+
+# Copies the rest of the source code into the container
+COPY . . 
+
+# The app listens on port 8080
+EXPOSE 8008
+
+CMD [ "air" ]
+# CMD [ "go", "run", "main.go" ]
